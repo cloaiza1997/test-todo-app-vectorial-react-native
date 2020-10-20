@@ -24,6 +24,8 @@ import {
 } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { StatusBar, SafeAreaView } from "react-native"
+import { color } from "./theme"
+import { Provider as PaperProvider } from "react-native-paper"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -61,18 +63,20 @@ function App() {
   // color set in native by rootView's background color. You can replace
   // with your own loading component if you wish.
   if (!rootStore) return null
-
+  console.log("******")
   // otherwise, we're ready to render the app
   return (
     <RootStoreProvider value={rootStore}>
       <SafeAreaProvider initialSafeAreaInsets={initialWindowSafeAreaInsets}>
-        <StatusBar barStyle="dark-content" backgroundColor="black" />
+        <StatusBar barStyle="dark-content" backgroundColor={color.palette.black} />
         <SafeAreaView style={SAFE_AREA}>
-          <RootNavigator
-            ref={navigationRef}
-            initialState={initialNavigationState}
-            onStateChange={onNavigationStateChange}
-          />
+          <PaperProvider>
+            <RootNavigator
+              ref={navigationRef}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+          </PaperProvider>
         </SafeAreaView>
       </SafeAreaProvider>
     </RootStoreProvider>

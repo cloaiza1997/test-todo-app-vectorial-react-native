@@ -21,6 +21,8 @@ const INPUT: TextStyle = {
   backgroundColor: color.palette.darkGrey,
   paddingHorizontal: 10,
   paddingVertical: 0,
+  borderWidth: 2,
+  borderColor: color.palette.darkGrey,
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -58,7 +60,7 @@ export function TextField(props: TextFieldProps) {
 
   return (
     <View style={containerStyle}>
-      <Text preset="fieldLabel" tx={labelTx} text={label} />
+      {labelTx || (label && <Text preset="fieldLabel" tx={labelTx} text={label} />)}
       <TextInput
         multiline={multiline}
         numberOfLines={numberOfLines}
