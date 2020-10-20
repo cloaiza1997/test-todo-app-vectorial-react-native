@@ -1,18 +1,10 @@
 import * as React from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
-import { color, typography } from "../../theme"
-import { Text } from "../"
+import { View, ViewStyle } from "react-native"
 import { Header } from "../header/header"
 import { useNavigation } from "@react-navigation/native"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
-}
-
-const TEXT: TextStyle = {
-  fontFamily: typography.primary,
-  fontSize: 14,
-  color: color.primary,
 }
 
 export interface HeaderCustomProps {

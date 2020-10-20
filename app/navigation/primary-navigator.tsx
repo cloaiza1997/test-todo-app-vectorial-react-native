@@ -8,7 +8,8 @@ import React from "react"
 
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
 import DrawerNavigatior from "./drawer-navigator/drawer-navigatior"
-import { WelcomeScreen, DemoScreen, LoginScreen } from "../screens"
+// import { WelcomeScreen, DemoScreen } from "../screens"
+import { LoginScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

@@ -1,6 +1,6 @@
 import React from "react"
 import { View, TextInput, TextStyle, ViewStyle } from "react-native"
-import { color, spacing, typography } from "../../theme"
+import { color, typography } from "../../theme"
 import { translate } from "../../i18n"
 import { Text } from "../text/text"
 import { TextFieldProps } from "./text-field.props"
@@ -8,7 +8,7 @@ import { mergeAll, flatten } from "ramda"
 
 // the base styling for the container
 const CONTAINER: ViewStyle = {
-  paddingVertical: spacing[3],
+  paddingVertical: 5,
 }
 
 // the base styling for the TextInput
@@ -17,7 +17,10 @@ const INPUT: TextStyle = {
   color: color.text,
   minHeight: 44,
   fontSize: 18,
-  backgroundColor: color.palette.white,
+  borderRadius: 10,
+  backgroundColor: color.palette.darkGrey,
+  paddingHorizontal: 10,
+  paddingVertical: 0,
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -42,6 +45,8 @@ export function TextField(props: TextFieldProps) {
     style: styleOverride,
     inputStyle: inputStyleOverride,
     forwardedRef,
+    multiline,
+    numberOfLines,
     ...rest
   } = props
   let containerStyle: ViewStyle = { ...CONTAINER, ...PRESETS[preset] }
@@ -55,6 +60,8 @@ export function TextField(props: TextFieldProps) {
     <View style={containerStyle}>
       <Text preset="fieldLabel" tx={labelTx} text={label} />
       <TextInput
+        multiline={multiline}
+        numberOfLines={numberOfLines}
         placeholder={actualPlaceholder}
         placeholderTextColor={color.palette.lighterGrey}
         underlineColorAndroid={color.transparent}

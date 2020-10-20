@@ -1,9 +1,6 @@
 import React, { useState } from "react"
-import { View } from "react-native"
 import { DrawerContentScrollView } from "@react-navigation/drawer"
-import { Drawer, Switch, TouchableRipple, Text } from "react-native-paper"
-import { useNavigationState } from "@react-navigation/native"
-import { useEffect } from "react"
+import { Drawer } from "react-native-paper"
 
 export default function DrawerContent(props) {
   const { navigation } = props
@@ -13,10 +10,6 @@ export default function DrawerContent(props) {
     setActive(screen)
     navigation.navigate(screen)
   }
-
-  // useEffect(() => {
-  //   onChangeScreen("home")
-  // }, [])
 
   return (
     <DrawerContentScrollView>
