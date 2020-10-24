@@ -1,13 +1,11 @@
 import React from "react"
-
-// import { HomeScreen } from "../../screens"
 import StackNavigation from "./drawer-stack-navigation"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import DrawerContent from "./drawer-content"
 
 const Drawer = createDrawerNavigator()
 
-export default function DrawerNavigatior(props) {
+export default function DrawerNavigatior() {
   return (
     <Drawer.Navigator
       initialRouteName="main"

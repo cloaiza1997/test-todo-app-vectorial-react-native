@@ -1,3 +1,5 @@
+require("../app/components/todo-item/todo-item.story")
+require("../app/components/date-picker/date-picker.story")
 require("../app/components/header-custom/header-custom.story")
 require("../app/components/text/text.story")
 require("../app/components/button/button.story")

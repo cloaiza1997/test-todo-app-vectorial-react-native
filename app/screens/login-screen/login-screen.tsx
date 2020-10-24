@@ -3,11 +3,11 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle, Image, ImageStyle, View, ScrollView, TextStyle } from "react-native"
 import { Button, Screen, Text, TextField } from "../../components"
 import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
+import { useStores } from "../../models"
 import { color } from "../../theme"
 import { CONTAINER } from "../../theme/container"
-// import { IconButton } from "react-native-paper"
 import Icon from "react-native-vector-icons/FontAwesome5"
+import { SM_ICON } from "../../theme/icons"
 
 const logo = require("../../assets/img/logo.png")
 
@@ -41,11 +41,6 @@ const INPUT_CONTAINER: ViewStyle = {
   marginVertical: 5,
 }
 
-const ICON = {
-  color: "#FFF",
-  fontSize: 20,
-}
-
 const TEXT_FIELD = {
   width: "100%",
   marginLeft: 20,
@@ -59,25 +54,23 @@ export const LoginScreen = observer(function LoginScreen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
-  // const rootStore = useStores()
+  const { user } = useStores()
 
   // Pull in navigation via hook
   const navigation = useNavigation()
   const [form, setForm] = useState({
-    user: "",
+    user: "cloaiza",
     userError: false,
-    pass: "",
+    pass: "123",
     passError: false,
   })
-  const [disabled, setDisabled] = useState(false)
-
   const login = () => {
     const errors = {
       userError: false,
       passError: false,
     }
     if (form.user && form.pass) {
-      navigation.navigate("main")
+      user.login(form.user, form.pass)
     } else {
       if (!form.user) {
         errors.userError = true
@@ -86,22 +79,37 @@ export const LoginScreen = observer(function LoginScreen() {
       if (!form.pass) {
         errors.passError = true
       }
+      setForm({ ...form, ...errors })
     }
-    setForm({ ...form, ...errors })
   }
 
   const onChangeForm = (field, event) => {
     setForm({ ...form, [field]: event.nativeEvent.text })
   }
 
+  useEffect(() => {
+    if (user.id) {
+      navigation.navigate("main")
+      // setForm({
+      //   user: "",
+      //   userError: false,
+      //   pass: "",
+      //   passError: false,
+      // })
+    }
+    // return () => {
+    //   console.log("****")
+    // }
+  }, [user.id, navigation])
+
   return (
     <Screen style={CONTAINER} preset="scroll">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={LOGO_CONTAINER}>
-          <Image source={logo} style={LOGO} width={10} />
+          <Image source={logo} style={LOGO} />
           <Text style={TITLE}>TodoApp</Text>
           <View style={INPUT_CONTAINER}>
-            <Icon style={ICON} name="user-alt" />
+            <Icon style={SM_ICON} name="user-alt" />
             <TextField
               style={TEXT_FIELD}
               inputStyle={form.userError && ERROR}
@@ -111,13 +119,14 @@ export const LoginScreen = observer(function LoginScreen() {
             />
           </View>
           <View style={INPUT_CONTAINER}>
-            <Icon style={ICON} name="lock" />
+            <Icon style={SM_ICON} name="lock" />
             <TextField
               style={TEXT_FIELD}
               inputStyle={form.passError && ERROR}
               placeholder="Contraseña"
               value={form.pass}
               onChange={(e) => onChangeForm("pass", e)}
+              secureTextEntry
             />
           </View>
           <Button style={BUTTON} onPress={login}>

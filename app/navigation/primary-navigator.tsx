@@ -10,7 +10,7 @@ import { createNativeStackNavigator } from "react-native-screens/native-stack"
 import DrawerNavigatior from "./drawer-navigator/drawer-navigatior"
 // import { WelcomeScreen, DemoScreen } from "../screens"
 import { LoginScreen } from "../screens"
-
+import { createStackNavigator } from "@react-navigation/stack"
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
  * as well as what properties (if any) they might take when navigating to them.
@@ -26,16 +26,20 @@ import { LoginScreen } from "../screens"
 export type PrimaryParamList = {
   login: undefined
   main: undefined
-  welcome: undefined
-  demo: undefined
+  // welcome: undefined
+  // demo: undefined
 }
 
 // Documentation: https://github.com/software-mansion/react-native-screens/tree/master/native-stack
 const Stack = createNativeStackNavigator<PrimaryParamList>()
 
+// const Stack = createStackNavigator()
+
 export function PrimaryNavigator() {
+
   return (
     <Stack.Navigator
+      initialRouteName="login"
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,

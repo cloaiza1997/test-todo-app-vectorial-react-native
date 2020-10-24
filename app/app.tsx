@@ -25,7 +25,8 @@ import {
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { StatusBar, SafeAreaView } from "react-native"
 import { color } from "./theme"
-import { Provider as PaperProvider } from "react-native-paper"
+import { Provider as PaperProvider, DarkTheme } from "react-native-paper"
+import FlashMessage from "react-native-flash-message"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -51,6 +52,8 @@ function App() {
     NAVIGATION_PERSISTENCE_KEY,
   )
 
+  const notifyRef = useRef(null)
+
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
     ;(async () => {
@@ -63,19 +66,23 @@ function App() {
   // color set in native by rootView's background color. You can replace
   // with your own loading component if you wish.
   if (!rootStore) return null
-  console.log("******")
+
+  DarkTheme.colors.primary = color.palette.cyan
+  DarkTheme.colors.accent = color.palette.cyan
+
   // otherwise, we're ready to render the app
   return (
     <RootStoreProvider value={rootStore}>
       <SafeAreaProvider initialSafeAreaInsets={initialWindowSafeAreaInsets}>
         <StatusBar barStyle="dark-content" backgroundColor={color.palette.black} />
         <SafeAreaView style={SAFE_AREA}>
-          <PaperProvider>
+          <PaperProvider theme={DarkTheme}>
             <RootNavigator
               ref={navigationRef}
               initialState={initialNavigationState}
               onStateChange={onNavigationStateChange}
             />
+            <FlashMessage ref={notifyRef} position="bottom" duration={2000} />
           </PaperProvider>
         </SafeAreaView>
       </SafeAreaProvider>

@@ -2,6 +2,8 @@ import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
+import { UserSnapshot } from "../../models/user/user"
+import { TodoSnapshot, TodoListSnapshot } from "../../models/todo/todo"
 
 /**
  * Manages all requests to the API.
@@ -45,58 +47,107 @@ export class Api {
   }
 
   /**
-   * Gets a list of users.
+   * LOGIN
    */
-  async getUsers(): Promise<Types.GetUsersResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
+  async login(user: string, pass: string): Promise<Types.GetUserResult> {
+    const response: ApiResponse<any> = await this.apisauce.get("users")
 
-    // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
 
-    const convertUser = raw => {
-      return {
-        id: raw.id,
-        name: raw.name,
-      }
-    }
-
-    // transform the data into the format we are expecting
     try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
+      // Se realiza la validación de los datos del usuario
+      const userLogin = response.data.filter((item) => item.user === user && item.pass === pass)
+
+      if (userLogin.length === 1) {
+        const resultUser: UserSnapshot = {
+          id: userLogin[0].id,
+          name: userLogin[0].name,
+          image: userLogin[0].image,
+          user: userLogin[0].user,
+          pass: userLogin[0].pass,
+          todos: userLogin[0].todos,
+        }
+        return { kind: "ok", user: resultUser }
+      } else {
+        return { kind: "unauthorized" }
+      }
     } catch {
       return { kind: "bad-data" }
     }
   }
 
   /**
-   * Gets a single user by ID
+   * CREATE TODO
    */
+  async storeTodo(todo): Promise<Types.GetTodoResult> {
+    // Se agrega una nueva tarea relacionada al usuario
+    const response: ApiResponse<any> = await this.apisauce.post(`users/${todo.userId}/todos`, todo)
 
-  async getUser(id: string): Promise<Types.GetUserResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
-
-    // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
 
-    // transform the data into the format we are expecting
     try {
-      const resultUser: Types.User = {
-        id: response.data.id,
-        name: response.data.name,
+      const resultUser: TodoSnapshot = {
+        ...response.data,
       }
-      return { kind: "ok", user: resultUser }
+      return { kind: "ok", todo: resultUser }
     } catch {
       return { kind: "bad-data" }
     }
+  }
+
+  /**
+   * GET TODOS BY USER
+   */
+  async getTodos(userId): Promise<Types.GetTodoListResult> {
+    // Se consultan las tareas del usuario
+    const response: ApiResponse<any> = await this.apisauce.get(`users/${userId}/todos`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    try {
+      const resultUser: TodoListSnapshot = { items: response.data }
+      return { kind: "ok", todo: resultUser }
+    } catch {
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+   * DELETE TODO
+   */
+  async deleteTodo(todoId): Promise<Types.DeleteTodo> {
+    // Se elimina la tarea del listado
+    const response: ApiResponse<any> = await this.apisauce.delete(`/todos/${todoId}`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", success: true }
+  }
+
+  /**
+   * UPDATE TODO STATUS
+   */
+  async updateTodo(todoId, finished): Promise<Types.DeleteTodo> {
+    // Se elimina la tarea del listado
+    const response: ApiResponse<any> = await this.apisauce.patch(`/todos/${todoId}`, { finished })
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", success: true }
   }
 }
