@@ -31,6 +31,14 @@ export const TodoListModel = types
       return self.items.filter((item) => !item.finished)
     },
   }))
+  .views((self) => ({
+    get completedCount() {
+      return self.completed.length
+    },
+    get penddingCount() {
+      return self.pendding.length
+    },
+  }))
   .actions((self) => ({
     /**
      * Organiza los elementos
@@ -79,7 +87,7 @@ export const TodoListModel = types
      * Cambia el estado de finalizado de una tarea
      */
     activeTodo: flow(function* (id) {
-      const response = yield self.environment.api.updateTodo(id, false)
+      const response = yield self.environment.api.updateTodo(id, { finished: false })
       if (response.kind === "ok") {
         self.setFinished(id, false, "Tarea activa nuevamente")
       }
@@ -88,9 +96,34 @@ export const TodoListModel = types
      * Marca una tarea como finalizada
      */
     completeTodo: flow(function* (id) {
-      const response = yield self.environment.api.updateTodo(id, true)
+      const response = yield self.environment.api.updateTodo(id, { finished: true })
       if (response.kind === "ok") {
         self.setFinished(id, true, "Tarea completada")
+      }
+    }),
+    editTodo: flow(function* (todo) {
+      // Se guarda en el servidor
+      const response = yield self.environment.api.updateTodo(todo.id, {
+        text: todo.text,
+        date: todo.date,
+      })
+
+      if (response.kind === "ok") {
+        // Se actualiza el elemento
+        self.items.find((item) => {
+          if (item.id === todo.id) {
+            item.date = todo.date
+            item.text = todo.text
+            return true
+          }
+          return false
+        })
+        self.orderData()
+        showMessage({
+          message: "Tarea actualizada correctamente",
+          type: "success",
+          icon: "success",
+        })
       }
     }),
     /**

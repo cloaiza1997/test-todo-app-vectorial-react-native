@@ -79,6 +79,17 @@ export class Api {
     }
   }
 
+  async updateUser(userId, user): Promise<Types.UpdateElement> {
+    const response: ApiResponse<any> = await this.apisauce.patch(`/users/${userId}`, user)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", success: true }
+  }
+
   /**
    * CREATE TODO
    */
@@ -124,7 +135,7 @@ export class Api {
   /**
    * DELETE TODO
    */
-  async deleteTodo(todoId): Promise<Types.DeleteTodo> {
+  async deleteTodo(todoId): Promise<Types.UpdateElement> {
     // Se elimina la tarea del listado
     const response: ApiResponse<any> = await this.apisauce.delete(`/todos/${todoId}`)
 
@@ -137,11 +148,10 @@ export class Api {
   }
 
   /**
-   * UPDATE TODO STATUS
+   * UPDATE TODO
    */
-  async updateTodo(todoId, finished): Promise<Types.DeleteTodo> {
-    // Se elimina la tarea del listado
-    const response: ApiResponse<any> = await this.apisauce.patch(`/todos/${todoId}`, { finished })
+  async updateTodo(todoId, todo): Promise<Types.UpdateElement> {
+    const response: ApiResponse<any> = await this.apisauce.patch(`/todos/${todoId}`, todo)
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)

@@ -1,14 +1,14 @@
-import React from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, View, ScrollView, TextStyle } from "react-native"
 import { Button, Screen, Text, HeaderCustom, TodoItem } from "../../components"
-import { useNavigation } from "@react-navigation/native"
-import { useStores } from "../../models"
 import { color } from "../../theme"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { LG_ICON } from "../../theme/icons"
+import { observer } from "mobx-react-lite"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "../../models"
+import { ViewStyle, View, ScrollView, TextStyle, Alert } from "react-native"
 import IconFontAwesome from "react-native-vector-icons/FontAwesome5"
 import IconMaterial from "react-native-vector-icons/MaterialIcons"
-import { LG_ICON } from "../../theme/icons"
+import React from "react"
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -37,12 +37,19 @@ export const TaskActive = observer(function TaskActive() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
+  const navigation = useNavigation()
   const { user } = useStores()
+
+  const openFormEdit = (todo) => {
+    navigation.navigate("form", todo)
+  }
+
+  console.log(user.todos.pendding)
 
   return (
     <Screen style={ROOT} preset="scroll">
       <ScrollView>
-        {user.todos.pendding.length === 0 ? (
+        {user.todos.penddingCount === 0 ? (
           <View style={CONTAINER_TAB}>
             <IconFontAwesome name="umbrella-beach" style={LG_ICON} />
             <Text style={TITLE}>Estás al día, no tienes tareas pendientes</Text>
@@ -53,7 +60,7 @@ export const TaskActive = observer(function TaskActive() {
               <TodoItem
                 key={index}
                 item={item}
-                onPress={() => console.log("***")}
+                onPress={() => openFormEdit(item)}
                 onLeft={{ type: "delete", func: () => user.todos.removeTodo(item) }}
                 onRight={{ type: "complete", func: () => user.todos.completeTodo(item.id) }}
               />
@@ -72,10 +79,26 @@ export const TaskInactive = observer(function TaskInactive() {
   const { user } = useStores()
   // Pull in navigation via hook
 
+  const detail = (todo) => {
+    Alert.alert(
+      "Detalle de la tarea",
+      `(${todo.date})\n${todo.text}`,
+      [
+        {
+          text: "Cerrar",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: false,
+      },
+    )
+  }
+
   return (
     <Screen style={ROOT} preset="scroll">
       <ScrollView>
-        {user.todos.completed.length === 0 ? (
+        {user.todos.completedCount === 0 ? (
           <View style={CONTAINER_TAB}>
             <IconMaterial name="pending-actions" style={LG_ICON} />
             <Text style={TITLE}>Revisa tus tareas activas. No hay tareas finalizadas</Text>
@@ -86,9 +109,10 @@ export const TaskInactive = observer(function TaskInactive() {
               <TodoItem
                 key={index}
                 item={item}
-                onPress={() => console.log("***")}
+                onPress={() => detail(item)}
                 onLeft={{ type: "open", func: () => user.todos.activeTodo(item.id) }}
                 onRight={{ type: "delete", func: () => user.todos.removeTodo(item) }}
+                completed
               />
             ))}
           </View>
@@ -129,7 +153,7 @@ export const HomeScreen = observer(function HomeScreen() {
 
   return (
     <Screen style={ROOT} preset="scroll">
-      <HeaderCustom title="Listado de tareas" />
+      <HeaderCustom title="Mis tareas" />
       <Tab.Navigator>
         <Tab.Screen name="Activas" component={TaskActive} />
         <Tab.Screen name="Finalizadas" component={TaskInactive} />

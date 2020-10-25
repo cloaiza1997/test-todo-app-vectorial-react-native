@@ -68,6 +68,7 @@ export function DatePicker(props: DatePickerProps) {
   useEffect(() => {
     if (!defaultDate) {
       setTextDate("")
+      setDate(new Date())
     }
   }, [defaultDate])
 
@@ -87,6 +88,7 @@ export function DatePicker(props: DatePickerProps) {
         date={date}
         onConfirm={handlerConfirm}
         onCancel={hideDatePicker}
+        minimumDate={new Date()}
       />
     </View>
   )

@@ -23,24 +23,29 @@ const BUTTON: ViewStyle = {
   marginTop: 20,
 }
 
-export const FormScreen = observer(function FormScreen() {
+export const FormScreen = observer(function FormScreen(props: any) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
   const { user } = useStores()
+  const { params } = props.route
 
   // Pull in navigation via hook
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
 
-  const [text, setText] = useState("")
-  const [date, setDate] = useState("")
+  const [text, setText] = useState(params?.text)
+  const [date, setDate] = useState(params?.date)
 
-  const addTodo = () => {
+  const onSubmit = () => {
     if (text && date) {
-      user.todos.addTodo({ userId: user.id, text, date, finished: false })
-      setText("")
-      setDate("")
+      if (params) {
+        user.todos.editTodo({ userId: user.id, text, date, id: params.id })
+      } else {
+        user.todos.addTodo({ userId: user.id, text, date, finished: false })
+        setText("")
+        setDate("")
+      }
     } else {
       showMessage({
         message: "Diligencia correctamente los datos",
@@ -73,9 +78,18 @@ export const FormScreen = observer(function FormScreen() {
 
         <DatePicker label="Fecha de cumplimiento" onChange={onChangeDate} defaultDate={date} />
 
-        <Button style={BUTTON} onPress={addTodo}>
-          <Icon style={SM_ICON} name="save" />
-          <Text>Crear tarea</Text>
+        <Button style={BUTTON} onPress={onSubmit}>
+          {params ? (
+            <>
+              <Icon style={SM_ICON} name="edit" />
+              <Text>Editar tarea</Text>
+            </>
+          ) : (
+            <>
+              <Icon style={SM_ICON} name="save" />
+              <Text>Crear tarea</Text>
+            </>
+          )}
         </Button>
       </ScrollView>
     </Screen>

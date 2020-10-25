@@ -13,7 +13,7 @@ const ROOT: ViewStyle = {
   padding: 0,
   justifyContent: "flex-start",
 }
-const TITLE: TextStyle = { textAlign: "center" }
+const TITLE: TextStyle = { textAlign: "center", fontSize: 20 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 50 }
 const RIGHT: ViewStyle = { width: 50 }

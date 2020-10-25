@@ -42,7 +42,7 @@ export const UserModel = types
         showMessage({
           message: "Usuario y/o contraseña incorrectos",
           type: "danger",
-          icon: "danger",
+          icon: "warning",
         })
       }
     }),
@@ -56,6 +56,17 @@ export const UserModel = types
         todos: undefined,
       })
     },
+    update: flow(function* (user) {
+      const result = yield self.environment.api.updateUser(self.id, user)
+      if (result.kind === "ok") {
+        self.name = user.name
+        showMessage({
+          message: "Usuario actualizado correctamente",
+          type: "success",
+          icon: "success",
+        })
+      }
+    }),
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**
