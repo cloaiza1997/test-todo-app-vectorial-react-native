@@ -59,7 +59,12 @@ export const UserModel = types
     update: flow(function* (user) {
       const result = yield self.environment.api.updateUser(self.id, user)
       if (result.kind === "ok") {
-        self.name = user.name
+        if (user.name) {
+          self.name = user.name
+        }
+        if (user.image) {
+          self.image = user.image
+        }
         showMessage({
           message: "Usuario actualizado correctamente",
           type: "success",

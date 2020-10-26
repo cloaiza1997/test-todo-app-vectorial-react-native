@@ -70,6 +70,12 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
-	</array>	
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>$(PRODUCT_NAME) Permitir acceder a tu galería</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) Permitir usar la cámara</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>$(PRODUCT_NAME) Permitir guardar las fotos en tu galería</string>
 </dict>
 </plist>

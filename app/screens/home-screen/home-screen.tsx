@@ -130,7 +130,7 @@ export const TaskInactive = observer(function TaskInactive() {
   const [page, setPage] = useState(1)
   const [end, setEnd] = useState(false)
 
-  console.log(user.todos.completedCount)
+  console.log(user.todos.completed)
 
   const detail = (todo) => {
     Alert.alert(
@@ -147,8 +147,6 @@ export const TaskInactive = observer(function TaskInactive() {
       },
     )
   }
-
-  // console.log(user.todos.pendding)
 
   const onRefresh = () => {
     setRefreshing(true)
