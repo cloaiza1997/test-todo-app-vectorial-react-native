@@ -4,22 +4,25 @@ import { HeaderProps } from "./header.props"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
 import { Icon } from "../icon/icon"
-import { spacing } from "../../theme"
 import { translate } from "../../i18n/"
 
 // static styles
 const ROOT: ViewStyle = {
   flexDirection: "row",
-  paddingHorizontal: spacing[4],
   alignItems: "center",
-  paddingTop: spacing[5],
-  paddingBottom: spacing[5],
+  padding: 0,
   justifyContent: "flex-start",
 }
-const TITLE: TextStyle = { textAlign: "center" }
+const TITLE: TextStyle = { textAlign: "center", fontSize: 20 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
-const LEFT: ViewStyle = { width: 32 }
-const RIGHT: ViewStyle = { width: 32 }
+const LEFT: ViewStyle = { width: 50 }
+const RIGHT: ViewStyle = { width: 50 }
+const BUTTON_LEFT: ViewStyle = {
+  height: 50,
+  width: 50,
+  justifyContent: "center",
+  alignItems: "center",
+}
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.
@@ -40,7 +43,7 @@ export function Header(props: HeaderProps) {
   return (
     <View style={{ ...ROOT, ...style }}>
       {leftIcon ? (
-        <Button preset="link" onPress={onLeftPress}>
+        <Button preset="link" onPress={onLeftPress} style={BUTTON_LEFT}>
           <Icon icon={leftIcon} />
         </Button>
       ) : (

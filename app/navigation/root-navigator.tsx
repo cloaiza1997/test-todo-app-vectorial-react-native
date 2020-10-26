@@ -5,10 +5,14 @@
  * will use once logged in.
  */
 import React from "react"
-import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
-
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+  DarkTheme as DarkThemeNavigation,
+} from "@react-navigation/native"
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
 import { PrimaryNavigator } from "./primary-navigator"
+import { color } from "../theme"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -32,7 +36,6 @@ const RootStack = () => {
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
-
         stackPresentation: "modal",
       }}
     >
@@ -51,8 +54,11 @@ export const RootNavigator = React.forwardRef<
   NavigationContainerRef,
   Partial<React.ComponentProps<typeof NavigationContainer>>
 >((props, ref) => {
+  DarkThemeNavigation.colors.text = color.palette.white
+  DarkThemeNavigation.colors.card = color.palette.blueGrey
+
   return (
-    <NavigationContainer {...props} ref={ref}>
+    <NavigationContainer {...props} ref={ref} theme={DarkThemeNavigation}>
       <RootStack />
     </NavigationContainer>
   )

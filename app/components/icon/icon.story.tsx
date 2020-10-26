@@ -6,7 +6,7 @@ import { Icon } from "./icon"
 declare let module
 
 storiesOf("Icon", module)
-  .addDecorator(fn => <StoryScreen>{fn()}</StoryScreen>)
+  .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
   .add("Names", () => (
     <Story>
       <UseCase text="back" usage="The icon for going back">
@@ -14,6 +14,9 @@ storiesOf("Icon", module)
       </UseCase>
       <UseCase text="bullet" usage="The icon for a bullet point">
         <Icon icon="bullet" />
+      </UseCase>
+      <UseCase text="menu" usage="The icon for a menu navigation">
+        <Icon icon="menu" />
       </UseCase>
     </Story>
   ))

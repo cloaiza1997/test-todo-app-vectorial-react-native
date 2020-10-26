@@ -23,14 +23,20 @@ import {
   useNavigationPersistence,
 } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { StatusBar, SafeAreaView } from "react-native"
+import { color } from "./theme"
+import { Provider as PaperProvider, DarkTheme } from "react-native-paper"
+import FlashMessage from "react-native-flash-message"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
-import { enableScreens } from 'react-native-screens'
+import { enableScreens } from "react-native-screens"
 enableScreens()
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+
+const SAFE_AREA = { flex: 1 }
 
 /**
  * This is the root component of our app.
@@ -46,9 +52,11 @@ function App() {
     NAVIGATION_PERSISTENCE_KEY,
   )
 
+  const notifyRef = useRef(null)
+
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       setupRootStore().then(setRootStore)
     })()
   }, [])
@@ -59,15 +67,24 @@ function App() {
   // with your own loading component if you wish.
   if (!rootStore) return null
 
+  DarkTheme.colors.primary = color.palette.cyan
+  DarkTheme.colors.accent = color.palette.cyan
+
   // otherwise, we're ready to render the app
   return (
     <RootStoreProvider value={rootStore}>
       <SafeAreaProvider initialSafeAreaInsets={initialWindowSafeAreaInsets}>
-        <RootNavigator
-          ref={navigationRef}
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
+        <StatusBar barStyle="dark-content" backgroundColor={color.palette.black} />
+        <SafeAreaView style={SAFE_AREA}>
+          <PaperProvider theme={DarkTheme}>
+            <RootNavigator
+              ref={navigationRef}
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+            <FlashMessage ref={notifyRef} position="bottom" duration={2000} />
+          </PaperProvider>
+        </SafeAreaView>
       </SafeAreaProvider>
     </RootStoreProvider>
   )

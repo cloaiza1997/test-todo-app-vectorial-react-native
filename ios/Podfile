@@ -25,6 +25,7 @@ end
 
 target 'TestTodoAppVectorial-tvOS' do
   # Pods for TestTodoAppVectorial-tvOS
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   target 'TestTodoAppVectorial-tvOSTests' do
     inherit! :search_paths

@@ -7,8 +7,10 @@
 import React from "react"
 
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
-
+import DrawerNavigatior from "./drawer-navigator/drawer-navigatior"
+// import { WelcomeScreen, DemoScreen } from "../screens"
+import { LoginScreen } from "../screens"
+import { createStackNavigator } from "@react-navigation/stack"
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
  * as well as what properties (if any) they might take when navigating to them.
@@ -22,23 +24,32 @@ import { WelcomeScreen, DemoScreen } from "../screens"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type PrimaryParamList = {
-  welcome: undefined
-  demo: undefined
+  login: undefined
+  main: undefined
+  // welcome: undefined
+  // demo: undefined
 }
 
 // Documentation: https://github.com/software-mansion/react-native-screens/tree/master/native-stack
 const Stack = createNativeStackNavigator<PrimaryParamList>()
 
+// const Stack = createStackNavigator()
+
 export function PrimaryNavigator() {
+
   return (
     <Stack.Navigator
+      initialRouteName="login"
       screenOptions={{
         headerShown: false,
         gestureEnabled: true,
       }}
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
+      <Stack.Screen name="login" component={LoginScreen} />
+      <Stack.Screen name="main" component={DrawerNavigatior} />
+      {/* <Stack.Screen name="home" component={HomeScreen} /> */}
+      {/* <Stack.Screen name="welcome" component={WelcomeScreen} /> */}
+      {/* <Stack.Screen name="demo" component={DemoScreen} /> */}
     </Stack.Navigator>
   )
 }
@@ -52,5 +63,5 @@ export function PrimaryNavigator() {
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome"]
+const exitRoutes = ["login"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
