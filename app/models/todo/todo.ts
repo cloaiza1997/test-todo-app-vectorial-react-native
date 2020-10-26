@@ -57,9 +57,12 @@ export const TodoListModel = types
       })
       self.items = order
     },
+  }))
+  .actions((self) => ({
     setFinished: (id, finished, message) => {
       // Busca la tarea que concida con el id
       self.items.find((item) => item.id === id).finished = finished
+      self.orderData()
       showMessage({
         message: message,
         type: "success",
@@ -87,19 +90,15 @@ export const TodoListModel = types
      * Cambia el estado de finalizado de una tarea
      */
     activeTodo: flow(function* (id) {
-      const response = yield self.environment.api.updateTodo(id, { finished: false })
-      if (response.kind === "ok") {
-        self.setFinished(id, false, "Tarea activa nuevamente")
-      }
+      self.setFinished(id, false, "Tarea activa nuevamente")
+      yield self.environment.api.updateTodo(id, { finished: false })
     }),
     /**
      * Marca una tarea como finalizada
      */
     completeTodo: flow(function* (id) {
-      const response = yield self.environment.api.updateTodo(id, { finished: true })
-      if (response.kind === "ok") {
-        self.setFinished(id, true, "Tarea completada")
-      }
+      self.setFinished(id, true, "Tarea completada")
+      yield self.environment.api.updateTodo(id, { finished: true })
     }),
     editTodo: flow(function* (todo) {
       // Se guarda en el servidor
@@ -130,15 +129,25 @@ export const TodoListModel = types
      * Elimina una tarea
      */
     removeTodo: flow(function* (item) {
-      const response = yield self.environment.api.deleteTodo(item.id)
+      destroy(item)
+      showMessage({
+        message: "Tarea eliminada correctamente",
+        type: "success",
+        icon: "success",
+      })
+      yield self.environment.api.deleteTodo(item.id)
+    }),
+    /**
+     * Paginación
+     */
+    pagination: flow(function* (userId, finished, page) {
+      const response = yield self.environment.api.getTodos(userId, finished, page)
 
-      if (response.kind === "ok") {
-        destroy(item)
-        showMessage({
-          message: "Tarea eliminada correctamente",
-          type: "success",
-          icon: "success",
-        })
+      if (response.todos.length === 0) {
+        return false
+      } else {
+        self.items.push(...response.todos)
+        return true
       }
     }),
   }))

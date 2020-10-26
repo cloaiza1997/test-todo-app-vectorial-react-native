@@ -115,9 +115,11 @@ export class Api {
   /**
    * GET TODOS BY USER
    */
-  async getTodos(userId): Promise<Types.GetTodoListResult> {
+  async getTodos(userId, finished, page = 1, limit = 10): Promise<Types.GetTodoListResult> {
     // Se consultan las tareas del usuario
-    const response: ApiResponse<any> = await this.apisauce.get(`users/${userId}/todos`)
+    const response: ApiResponse<any> = await this.apisauce.get(
+      `users/${userId}/todos?finished=${finished}&_sort=date&_order=asc&_page=${page}&_limit=${limit}`,
+    )
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -125,8 +127,8 @@ export class Api {
     }
 
     try {
-      const resultUser: TodoListSnapshot = { items: response.data }
-      return { kind: "ok", todo: resultUser }
+      const resultUser: TodoListSnapshot = response.data
+      return { kind: "ok", todos: resultUser }
     } catch {
       return { kind: "bad-data" }
     }

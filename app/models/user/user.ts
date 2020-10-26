@@ -32,12 +32,12 @@ export const UserModel = types
 
       if (result.kind === "ok") {
         const user = result.user
-        // Consulta los todos del usuario
-        const todos = yield self.environment.api.getTodos(user.id)
-        user.todos = todos.todo
+        // Consulta los todos del usuario en estado finalizado y no finalizado
+        const todosPendding = yield self.environment.api.getTodos(user.id, false)
+        const todosCompleted = yield self.environment.api.getTodos(user.id, true)
+        // Concatena todos los resultados en un solo arreglo
+        user.todos = { items: todosPendding.todos.concat(todosCompleted.todos) }
         self.setData(user)
-        // Ordena la data
-        self.todos.orderData()
       } else {
         showMessage({
           message: "Usuario y/o contraseña incorrectos",
