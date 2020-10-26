@@ -4,6 +4,7 @@ import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
 import { UserSnapshot } from "../../models/user/user"
 import { TodoSnapshot, TodoListSnapshot } from "../../models/todo/todo"
+import { Alert } from "react-native"
 
 /**
  * Manages all requests to the API.
@@ -54,6 +55,7 @@ export class Api {
 
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
+      Alert.alert(response.problem)
       if (problem) return problem
     }
 

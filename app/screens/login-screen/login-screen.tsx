@@ -51,17 +51,13 @@ const ERROR = {
 }
 
 export const LoginScreen = observer(function LoginScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-  // OR
   const { user } = useStores()
 
-  // Pull in navigation via hook
   const navigation = useNavigation()
   const [form, setForm] = useState({
-    user: "cloaiza",
+    user: "",
     userError: false,
-    pass: "123",
+    pass: "",
     passError: false,
   })
   const login = () => {
@@ -90,16 +86,13 @@ export const LoginScreen = observer(function LoginScreen() {
   useEffect(() => {
     if (user.id) {
       navigation.navigate("main")
-      // setForm({
-      //   user: "",
-      //   userError: false,
-      //   pass: "",
-      //   passError: false,
-      // })
+      setForm({
+        user: "",
+        userError: false,
+        pass: "",
+        passError: false,
+      })
     }
-    // return () => {
-    //   console.log("****")
-    // }
   }, [user.id, navigation])
 
   return (

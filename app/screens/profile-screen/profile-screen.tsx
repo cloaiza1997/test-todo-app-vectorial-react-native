@@ -6,6 +6,7 @@ import { useStores } from "../../models"
 import { color } from "../../theme"
 import { IconButton } from "react-native-paper"
 import ImagePicker from "react-native-image-picker"
+const avatar = require("../../assets/img/avatar.png")
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -109,17 +110,13 @@ export const ProfileScreen = observer(function ProfileScreen() {
     })
   }
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
-  // console.log("**", user.image)
-
   return (
     <Screen style={ROOT} preset="scroll">
       <HeaderCustom title="Mi perfil" />
       <ScrollView style={CONTENT}>
         <View style={PROFILE_CONTENT}>
           <View>
-            <Image source={{ uri: user.image }} style={IMAGE} />
+            <Image source={user.image ? { uri: user.image } : avatar} style={IMAGE} />
             <IconButton icon="camera-plus" style={PHOTO} onPress={openPicker} />
           </View>
           <View style={INPUT_CONTENT}>
