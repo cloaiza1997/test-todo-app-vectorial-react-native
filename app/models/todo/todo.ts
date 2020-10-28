@@ -129,13 +129,14 @@ export const TodoListModel = types
      * Elimina una tarea
      */
     removeTodo: flow(function* (item) {
+      const id = item.id
       destroy(item)
       showMessage({
         message: "Tarea eliminada correctamente",
         type: "success",
         icon: "success",
       })
-      yield self.environment.api.deleteTodo(item.id)
+      yield self.environment.api.deleteTodo(id)
     }),
     /**
      * Paginación
